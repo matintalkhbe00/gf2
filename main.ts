@@ -1,38 +1,51 @@
 import fetch from 'node-fetch';
 
-async function action(headers: Record<string, string>): Promise<boolean> {
-  const res = await fetch(
-    "https://dev-api.goatsbot.xyz/missions/action/66db47e2ff88e4527783327e",
-    {
-      method: "POST",
-      headers,
-    }
-  );
+let totalRewards = 0; // جمع کل جوایز در سطح کل برنامه
 
-  const json = await res.json();
-  return res.status === 201;
+async function action(headers: Record<string, string>): Promise<boolean> {
+  try {
+    const res = await fetch(
+      "https://dev-api.goatsbot.xyz/missions/action/66db47e2ff88e4527783327e",
+      {
+        method: "POST",
+        headers,
+      }
+    );
+
+    return res.ok; // اگر درخواست موفق بود، true برمی‌گرداند
+  } catch (error) {
+    console.error('Error in action:', error);
+    return false;
+  }
 }
 
 async function getNextTime(headers: Record<string, string>): Promise<number> {
-  const res = await fetch("https://api-mission.goatsbot.xyz/missions/user", {
-    headers,
-  });
+  try {
+    const res = await fetch("https://api-mission.goatsbot.xyz/missions/user", {
+      headers,
+    });
 
-  if (res.status !== 200) {
-    throw new Error("Get missions request failed");
+    if (!res.ok) {
+      console.error(`Get missions request failed: ${res.status} ${res.statusText}`);
+      return 20000000000; // زمان پیش‌فرض
+    }
+
+    const data = await res.json();
+    return data["SPECIAL MISSION"][0]["next_time_execute"];
+  } catch (error) {
+    console.error('Error in getNextTime:', error);
+    return 20000000000; // زمان پیش‌فرض
   }
-
-  const data = await res.json();
-  return data["SPECIAL MISSION"][0]["next_time_execute"];
 }
 
 function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function handleToken(authToken: string): Promise<void> {
+async function handleToken(authToken: string, tokenNumber: number): Promise<void> {
   const headers: Record<string, string> = { Authorization: `Bearer ${authToken}` };
   let nextTime = await getNextTime(headers);
+  let rewardsCount = 0; // شمارش جوایز برای هر توکن
 
   while (true) {
     const now = Math.floor(Date.now() / 1000);
@@ -40,41 +53,37 @@ async function handleToken(authToken: string): Promise<void> {
     if (now >= nextTime) {
       const result = await action(headers);
       if (result) {
-        console.log(`Success: Action to earn was successfully completed with token ${authToken}`);
+        rewardsCount += 200; // هر بار که عمل موفقیت‌آمیز باشد، 200 به شمارش جوایز اضافه می‌شود
+        totalRewards += 200; // به جمع کل جوایز اضافه می‌شود
+        console.log(`Success: Action to earn was successfully completed for token number ${tokenNumber}.`);
+        console.log(`Total rewards for token number ${tokenNumber}: ${rewardsCount}`);
+        console.log(`Total rewards accumulated: ${totalRewards}`);
         nextTime = await getNextTime(headers);
-        console.log(`Success: Got new nextTime with token ${authToken}: ${nextTime}`);
+        console.log(`Success: Got new nextTime for token number ${tokenNumber}: ${nextTime}`);
       } else {
-        console.log(`Failed: Action to earn failed with token ${authToken}`);
+        console.log(`Failed: Action to earn failed for token number ${tokenNumber}`);
       }
-    } else {
-      // console.log(`Waiting: Time left for next action with token ${authToken}: ${nextTime - now}s`);
     }
 
     await delay(1000);
   }
 }
 
-async function makeMoney(authTokens: string[]): Promise<void> {
-  // Create an array of promises, one for each token
-  const promises = authTokens.map(token => handleToken(token));
-
-  // Use Promise.all to run all promises concurrently
+async function makeMoney(tokensAndNumbers: { token: string, number: number }[]): Promise<void> {
+  const promises = tokensAndNumbers.map(({ token, number }) => handleToken(token, number));
   await Promise.all(promises);
 }
 
-// List of your authorization tokens
-const authTokens: string[] = [
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzE4YTM5YTlkNTdkOTNmMDAzODU4IiwiaWF0IjoxNzI2OTU1NTAwLCJleHAiOjE3MjcwNDE5MDAsInR5cGUiOiJhY2Nlc3MifQ.bHCpB_GRhNSmNYlkKL1kYWJa6jdAw-UeaRmDJmTS7fo" ,
-  //09357792770
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzE2M2E5YTlkNTdkOTNmZmJhZDcxIiwiaWF0IjoxNzI2OTU1MzExLCJleHAiOjE3MjcwNDE3MTEsInR5cGUiOiJhY2Nlc3MifQ.DNIfjqnO-x3_oanWtrKoPc5ikcoj3xBwyF0QP4UK-Ig",
-  //09036567864
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzEwNTc2M2Y3Mzg1MGY4M2ZkN2Y1IiwiaWF0IjoxNzI2OTU1MDcwLCJleHAiOjE3MjcwNDE0NzAsInR5cGUiOiJhY2Nlc3MifQ.qD5CJ1kzCms9e0Mp2ZcovkPLnGOWYnPg0ZoANvNCXl0",
-  //09197473984
+// لیستی از توکن‌ها و شماره‌های مرتبط با آن‌ها
+const tokensAndNumbers = [
  
-
-
+  { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzEwNTc2M2Y3Mzg1MGY4M2ZkN2Y1IiwiaWF0IjoxNzI3MDg4MTk1LCJleHAiOjE3MjcxNzQ1OTUsInR5cGUiOiJhY2Nlc3MifQ.-kJ41tA5-va-J67PtDem40QvKr7R9TyhA_VxNe9VvGQ", number: 5 },
+  { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzE2M2E5YTlkNTdkOTNmZmJhZDcxIiwiaWF0IjoxNzI3MDg4MzQ2LCJleHAiOjE3MjcxNzQ3NDYsInR5cGUiOiJhY2Nlc3MifQ.GQg3Hir-I87VMTM1r1xd_SqLGB5HUaHKrNdYTMVaxnY", number: 6 },
+  { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzE4YTM5YTlkNTdkOTNmMDAzODU4IiwiaWF0IjoxNzI3MDg4NDgwLCJleHAiOjE3MjcxNzQ4ODAsInR5cGUiOiJhY2Nlc3MifQ.vFctpVA7weAeer1ZJiDXTMoKY8RR3wY0_1DWzOENqf4", number: 7 },
+  { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlZTAzZDk1NGI2OTAxNzgwMDk5ZWE5IiwiaWF0IjoxNzI3MDg4NjEzLCJleHAiOjE3MjcxNzUwMTMsInR5cGUiOiJhY2Nlc3MifQ.UYirA2PUlq_7cvKgIXWIfCct4-RG1vr70byAUaMZAj4", number: 8 },
 ];
 
-makeMoney(authTokens);
+
+makeMoney(tokensAndNumbers);
 
 console.log("Executed: Started...");
