@@ -79,10 +79,10 @@ async function makeMoney(tokensAndNumbers: { token: string, number: number }[]):
 // لیستی از توکن‌ها و شماره‌های مرتبط با آن‌ها
 const tokensAndNumbers = [
  
-  { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzEwNTc2M2Y3Mzg1MGY4M2ZkN2Y1IiwiaWF0IjoxNzI3MDg4MTk1LCJleHAiOjE3MjcxNzQ1OTUsInR5cGUiOiJhY2Nlc3MifQ.-kJ41tA5-va-J67PtDem40QvKr7R9TyhA_VxNe9VvGQ", number: 5 },
-  { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzE2M2E5YTlkNTdkOTNmZmJhZDcxIiwiaWF0IjoxNzI3MDg4MzQ2LCJleHAiOjE3MjcxNzQ3NDYsInR5cGUiOiJhY2Nlc3MifQ.GQg3Hir-I87VMTM1r1xd_SqLGB5HUaHKrNdYTMVaxnY", number: 6 },
-  { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzE4YTM5YTlkNTdkOTNmMDAzODU4IiwiaWF0IjoxNzI3MDg4NDgwLCJleHAiOjE3MjcxNzQ4ODAsInR5cGUiOiJhY2Nlc3MifQ.vFctpVA7weAeer1ZJiDXTMoKY8RR3wY0_1DWzOENqf4", number: 7 },
-  { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlZTAzZDk1NGI2OTAxNzgwMDk5ZWE5IiwiaWF0IjoxNzI3MDg4NjEzLCJleHAiOjE3MjcxNzUwMTMsInR5cGUiOiJhY2Nlc3MifQ.UYirA2PUlq_7cvKgIXWIfCct4-RG1vr70byAUaMZAj4", number: 8 },
+  { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzEwNTc2M2Y3Mzg1MGY4M2ZkN2Y1IiwiaWF0IjoxNzI3MTc4OTY5LCJleHAiOjE3MjcyNjUzNjksInR5cGUiOiJhY2Nlc3MifQ.bFtf3op0jwzGqWnn72VV5bDWNCj0Z8i_6Dz9nnk1tzo", number: 9197473984 },
+    { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzE2M2E5YTlkNTdkOTNmZmJhZDcxIiwiaWF0IjoxNzI3MTc5NDM1LCJleHAiOjE3MjcyNjU4MzUsInR5cGUiOiJhY2Nlc3MifQ.re6CI3Jz_sjvh36JCzFgfhxyI9iFuvLe7M0fAwru808", number: 9036567864 },
+    { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzE4YTM5YTlkNTdkOTNmMDAzODU4IiwiaWF0IjoxNzI3MTc5NzQ0LCJleHAiOjE3MjcyNjYxNDQsInR5cGUiOiJhY2Nlc3MifQ.0c0bSpxoJrXWGaVD-XoTiV_FldIn5FdUW070h_mYp6Q", number: 9357792770 },
+    { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlZTAzZDk1NGI2OTAxNzgwMDk5ZWE5IiwiaWF0IjoxNzI3MTgyNTAzLCJleHAiOjE3MjcyNjg5MDMsInR5cGUiOiJhY2Nlc3MifQ.KJocCB7I1bTYk6EQjhVI9CpOb63NFqQ-fXZmkpTk0Tk", number: 9045087864 },
 ];
 
 
