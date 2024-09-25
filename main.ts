@@ -87,7 +87,7 @@ const tokensAndNumbers = [
   { token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjZlYzE4YTM5YTlkNTdkOTNmMDAzODU4IiwiaWF0IjoxNzI3MjgwODQ2LCJleHAiOjE3MjczNjcyNDYsInR5cGUiOiJhY2Nlc3MifQ.9jHw9Zcr8f79WId3_iIPJ1x8vgeLByoVppbGAJFSBF0", number: 6 },
 
 ];
-];
+
 
 
 makeMoney(tokensAndNumbers);
