@@ -28,7 +28,7 @@ async function getNextTime(headers: Record<string, string>): Promise<number> {
     if (!res.ok) {
       console.error(`Get missions request failed: ${res.status} ${res.statusText}`);
       const now = Math.floor(Date.now() / 1000);
-      return now+60 ; // زمان پیش‌فرض
+      return now + 60; // زمان پیش‌فرض
     }
 
     const data = await res.json();
@@ -36,7 +36,7 @@ async function getNextTime(headers: Record<string, string>): Promise<number> {
   } catch (error) {
     console.error('Error in getNextTime:', error);
     const now = Math.floor(Date.now() / 1000);
-    return now+60 ; // زمان پیش‌فرض
+    return now + 60; // زمان پیش‌فرض
   }
 }
 
@@ -51,7 +51,7 @@ async function handleToken(authToken: string, tokenNumber: number): Promise<void
 
   while (true) {
     const now = Math.floor(Date.now() / 1000);
-    
+
     if (now >= nextTime) {
       const result = await action(headers);
       if (result) {
@@ -67,7 +67,9 @@ async function handleToken(authToken: string, tokenNumber: number): Promise<void
       }
     }
 
-    await delay(1000);
+    // زمان باقی‌مانده تا اجرای بعدی محاسبه می‌شود
+    const waitTime = Math.max(nextTime - now, 1); // حداقل 1 ثانیه تاخیر
+    await delay(waitTime * 1000); // تبدیل به میلی‌ثانیه
   }
 }
 
